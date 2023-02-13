@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+    bdd:
+        image: mysql:5.7
+        container_name: containeur_mysql
+        restart: always
+        volumes:
+            - db-volume:/var/lib/mysql
+            - ./balderaouf.sql:/docker-entrypoint-initdb.d/balderaouf.sql
+        environment:
+            MYSQL_ROOT_PASSWORD: balderaouf
+            MYSQL_DATABASE: balderaouf
+            MYSQL_USER: balderaouf
+            MYSQL_PASSWORD: balderaouf
+
+    appli:
+        image: application
+        container_name: containeur_application
+        restart: always
+        volumes:
+            - app-volume:/var/www/html/app
+            - ./app:/var/www/html
+        ports:
+            - 8080:80
+        depends_on:
+            - bdd
+
+volumes:
+    db-volume:
+    app-volume:
